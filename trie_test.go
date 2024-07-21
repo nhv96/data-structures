@@ -68,6 +68,43 @@ func Test_Trie(t *testing.T) {
 			}
 		}
 	})
+
+	t.Run("delete", func(t *testing.T) {
+		trie := NewTrie()
+
+		trie.Insert("hello", 10)
+		trie.Insert("apply", 42)
+		trie.Insert("hell", 666)
+		trie.Insert("helloworld", 2024)
+
+		trie.Delete(trie.Root, "hello")
+		trie.Delete(trie.Root, "hell")
+		trie.Delete(trie.Root, "notexist")
+		trie.Delete(trie.Root, "apply")
+
+		trie.Insert("apply", 12)
+
+		testCases := []struct {
+			key          string
+			expectedVal  int
+			expectedTerm bool
+		}{
+			{"hello", 0, false},
+			{"apply", 12, true},
+			{"something", 0, false},
+		}
+
+		for _, tc := range testCases {
+			val, found := trie.Find(tc.key)
+			if found != tc.expectedTerm {
+				t.Errorf("Key \"%v\" is expected to be \"%v\", got \"%v\"", tc.key, tc.expectedTerm, found)
+			}
+
+			if found && val != tc.expectedVal {
+				t.Errorf("Key \"%v\" is expected to have value \"%v\", got \"%v\"", tc.key, tc.expectedVal, val)
+			}
+		}
+	})
 }
 
 // helper to find key node in he tree
@@ -75,7 +112,7 @@ func find(t *Trie, key string) (*Node, bool) {
 	cur := t.Root
 
 	for _, c := range key {
-		child, exist := cur.Children[c]
+		child, exist := cur.Children[string(c)]
 		if !exist {
 			return nil, false
 		}
