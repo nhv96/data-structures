@@ -44,3 +44,22 @@ func (t *Trie) Insert(key string, value int) {
 	cur.IsTerminal = true
 	cur.Value = value
 }
+
+// Find finds the value of key and return. Returns false if not found
+func (t *Trie) Find(key string) (int, bool) {
+	cur := t.Root
+
+	for _, c := range key {
+		children, exist := cur.Children[c]
+		if !exist {
+			return 0, false
+		}
+		cur = children
+	}
+
+	if cur.IsTerminal {
+		return cur.Value, cur.IsTerminal
+	}
+
+	return 0, false
+}
