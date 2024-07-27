@@ -1,4 +1,4 @@
-package gotrie
+package trie
 
 // Node represent a node in trie tree
 type Node struct {

@@ -1,4 +1,4 @@
-package gotrie
+package trie
 
 import (
 	"testing"
