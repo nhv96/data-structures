@@ -49,7 +49,7 @@ func (h *BHeap) sink(k int) {
 			smallest = right
 		}
 
-		if left >= h.heapSize || h.heap[k] < smallest {
+		if left >= h.heapSize || h.heap[k] < h.heap[smallest] {
 			break
 		}
 
