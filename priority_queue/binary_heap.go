@@ -64,3 +64,19 @@ func (h *BHeap) swap(i, j int) {
 	h.heap[j] = h.heap[i]
 	h.heap[i] = tmp
 }
+
+func (h *BHeap) swim(k int) {
+	parent := (k - 1) / 2
+	for k > 0 && h.heap[parent] > h.heap[k] {
+		h.swap(parent, k)
+		k = parent
+		parent = (k - 1) / 2
+	}
+}
+
+// Add adds an element to the heap
+func (h *BHeap) Add(v int) {
+	h.heap = append(h.heap, v)
+	h.heapSize = len(h.heap)
+	h.swim(h.heapSize - 1)
+}
