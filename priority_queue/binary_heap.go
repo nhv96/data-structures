@@ -80,3 +80,46 @@ func (h *BHeap) Add(v int) {
 	h.heapSize = len(h.heap)
 	h.swim(h.heapSize - 1)
 }
+
+// Poll retrieve the root element of the heep
+func (h *BHeap) Poll() int {
+	return h.removeAt(0)
+}
+
+// remove removes the element that has value v
+func (h *BHeap) remove(v int) {
+	// linear scan
+	for i, val := range h.heap {
+		if val == v {
+			h.removeAt(i)
+		}
+	}
+}
+
+// removeAt removes the element at the index k
+func (h *BHeap) removeAt(k int) int {
+	valOfEleToRemove := h.heap[k]
+	// swap value with the last element
+	lastIndex := h.heapSize - 1
+	h.heap[k] = h.heap[lastIndex]
+
+	// remove the last element
+	h.heap = h.heap[:lastIndex]
+	h.heapSize--
+
+	// if removed the element at the last index, don't need to check for heap invariant
+	if k == lastIndex {
+		return valOfEleToRemove
+	}
+
+	// heapify the heap again
+	valAtK := h.heap[k]
+	// try to sink the element
+	h.sink(k)
+
+	if h.heap[k] == valAtK {
+		h.swim(k)
+	}
+
+	return valOfEleToRemove
+}
