@@ -110,4 +110,30 @@ func Test_InsertCOW(t *testing.T) {
 			}
 		}
 	})
+
+	t.Run("update data of a node", func(t *testing.T) {
+		trie0 := NewTrie()
+		trie0.Insert("aa", 1)
+		trie0.Insert("ab", 2)
+		trie0.Insert("bc", 3)
+
+		trie1 := trie0.InsertCOW("ba", 4)
+
+		trie2 := trie1.InsertCOW("bc", 100)
+
+		node2, found2 := find(trie2, "bc")
+
+		if found2 != true {
+			t.Errorf("Expected key 'bc' to be %v, got %v", false, found2)
+		}
+
+		if found2 && node2.Value != 100 {
+			t.Errorf("Expected key 'bc' to be %v, got %v", 100, node2.Value)
+		}
+
+		_, found0 := find(trie0, "ba")
+		if found0 == true {
+			t.Errorf("Expected key 'ba' to be %v, got %v", false, found0)
+		}
+	})
 }

@@ -8,8 +8,16 @@ func (t *Trie) InsertCOW(key string, value int) *Trie {
 
 	// create new root
 	newTrie := NewTrie()
-	newParent := NewNode()
-	newTrie.Root = newParent
+	parent := newTrie.Root
+
+	// operation on an empty trie
+	if len(cur.Children) == 0 {
+		cur = parent
+	} else {
+		for k, node := range cur.Children {
+			parent.Children[k] = node
+		}
+	}
 
 	// find the node that need modified or to be inserted
 	for _, c := range key {
@@ -26,15 +34,8 @@ func (t *Trie) InsertCOW(key string, value int) *Trie {
 			}
 
 			// link the newly created child node to parent node
-			newParent.Children[string(c)] = newchild
-
-			// link the existing nodes (except for the node with same key)
-			// to the new parent node
-			for k, node := range cur.Children {
-				if k != string(c) {
-					newParent.Children[k] = node
-				}
-			}
+			parent.Children[string(c)] = newchild
+			parent = newchild
 
 			// move to the next inner node
 			cur = newchild
@@ -43,8 +44,12 @@ func (t *Trie) InsertCOW(key string, value int) *Trie {
 			node := NewNode()
 			cur.Children[string(c)] = node
 
+			// update nearest parent node
+			parent = node
+
 			// move to the next inner node
 			cur = cur.Children[string(c)]
+
 		}
 	}
 
