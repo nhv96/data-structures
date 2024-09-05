@@ -1,32 +1,31 @@
 package trie
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/stretchr/testify/assert"
+)
 
 func Test_InsertCOW(t *testing.T) {
 	t.Parallel()
 
 	t.Run("new node must be added", func(t *testing.T) {
+		is := assert.New(t)
 		trie0 := NewTrie()
 		trie1 := trie0.InsertCOW("a", 1)
 
 		node1, found1 := find(trie1, "a")
-
-		if found1 != true {
-			t.Errorf("Key \"%s\" is expected to be \"%v\", got \"%v\"", "a", true, found1)
-		}
-
-		if found1 && node1.Value != 1 {
-			t.Errorf("Key \"%s\" is expected to have value \"%v\", got \"%v\"", "a", 1, node1.Value)
-		}
+		is.Equal(true, found1)
+		is.Equal(true, node1.IsTerminal)
+		is.Equal(1, node1.Value)
 
 		node0, found0 := find(trie0, "a")
-
-		if found0 != false || node0 != nil {
-			t.Errorf("Key \"%s\" is expected to be \"%v\", got \"%v\"", "a", false, found0)
-		}
+		is.Equal(false, found0)
+		is.Nil(node0)
 	})
 
 	t.Run("new node must be added and retain old nodes", func(t *testing.T) {
+		is := assert.New(t)
 		trie0 := NewTrie()
 		trie0.Insert("aa", 1)
 		trie0.Insert("ab", 2)
@@ -101,17 +100,17 @@ func Test_InsertCOW(t *testing.T) {
 
 		for _, steps := range testSteps {
 			node, found := find(steps.tree, steps.key)
-			if found != steps.expectedTerm {
-				t.Errorf("Step '%s' expected to be %v, got %v", steps.name, steps.expectedTerm, found)
-			}
 
-			if found && node.Value != steps.expectedVal {
-				t.Errorf("Step '%s' expected to be %v, got %v", steps.name, steps.expectedVal, node.Value)
+			is.Equalf(steps.expectedTerm, found, "Step '%s' expected to be %v, got %v", steps.name, steps.expectedTerm, found)
+			if steps.expectedTerm {
+				is.Equalf(steps.expectedVal, node.Value, "Step '%s' expected to be %v, got %v", steps.name, steps.expectedVal, node.Value)
 			}
 		}
 	})
 
 	t.Run("update data of a node", func(t *testing.T) {
+		is := assert.New(t)
+
 		trie0 := NewTrie()
 		trie0.Insert("aa", 1)
 		trie0.Insert("ab", 2)
@@ -122,18 +121,19 @@ func Test_InsertCOW(t *testing.T) {
 		trie2 := trie1.InsertCOW("bc", 100)
 
 		node2, found2 := find(trie2, "bc")
-
-		if found2 != true {
-			t.Errorf("Expected key 'bc' to be %v, got %v", false, found2)
-		}
-
-		if found2 && node2.Value != 100 {
-			t.Errorf("Expected key 'bc' to be %v, got %v", 100, node2.Value)
-		}
+		is.Equal(true, found2)
+		is.Equal(100, node2.Value)
 
 		_, found0 := find(trie0, "ba")
-		if found0 == true {
-			t.Errorf("Expected key 'ba' to be %v, got %v", false, found0)
-		}
+		is.Equal(false, found0)
+
+		_ = trie2.InsertCOW("aa", 10)
+		node0, found0 := find(trie0, "aa")
+		is.Equal(true, found0)
+		is.Equal(1, node0.Value)
+
+		node2, found2 = find(trie2, "aa")
+		is.Equal(true, found2)
+		is.Equal(1, node2.Value)
 	})
 }
