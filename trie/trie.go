@@ -77,10 +77,8 @@ func (t *Trie) Delete(cur *Node, key string) *Node {
 			// but maybe when we implement the tree with different data type, we will need to update it to nil
 		}
 		// check if the current node has any children
-		for _, childNode := range cur.Children {
-			if len(childNode.Children) > 0 {
-				return cur
-			}
+		if len(cur.Children) > 0 {
+			return cur
 		}
 		// otherwise return nil
 		return nil
