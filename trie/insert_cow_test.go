@@ -29,9 +29,9 @@ func Test_InsertCOW(t *testing.T) {
 		trie0 := NewTrie()
 		trie0.Insert("aa", 1)
 		trie0.Insert("ab", 2)
-		trie0.Insert("bc", 3)
+		trie0.Insert("bcc", 3)
 
-		trie1 := trie0.InsertCOW("ba", 4)
+		trie1 := trie0.InsertCOW("bca", 4)
 
 		testSteps := []struct {
 			name         string
@@ -76,23 +76,23 @@ func Test_InsertCOW(t *testing.T) {
 				expectedTerm: true,
 			},
 			{
-				name:         "find in trie1 and must find \"bc\"",
+				name:         "find in trie1 and must find \"bcc\"",
 				tree:         trie1,
-				key:          "bc",
+				key:          "bcc",
 				expectedVal:  3,
 				expectedTerm: true,
 			},
 			{
-				name:         "find in trie1 and must find \"ba\"",
+				name:         "find in trie1 and must find \"bca\"",
 				tree:         trie1,
-				key:          "ba",
+				key:          "bca",
 				expectedVal:  4,
 				expectedTerm: true,
 			},
 			{
-				name:         "find in trie0 and must not find \"ba\"",
+				name:         "find in trie0 and must not find \"bca\"",
 				tree:         trie0,
-				key:          "ba",
+				key:          "bca",
 				expectedVal:  0,
 				expectedTerm: false,
 			},
