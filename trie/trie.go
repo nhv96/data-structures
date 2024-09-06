@@ -80,7 +80,7 @@ func (t *Trie) Delete(cur *Node, key string) *Node {
 		if len(cur.Children) > 0 {
 			return cur
 		}
-		// otherwise return nil
+		// otherwise return nil, this will delete the node
 		return nil
 	}
 
@@ -91,6 +91,11 @@ func (t *Trie) Delete(cur *Node, key string) *Node {
 		// the child node doesn't have any more children, we delete it that key
 		if cur.Children[k] == nil {
 			delete(cur.Children, k)
+
+			// if current node is empty, we delete it too
+			if cur.IsTerminal == false {
+				return nil
+			}
 		}
 	}
 	return cur

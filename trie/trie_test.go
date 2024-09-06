@@ -2,12 +2,16 @@ package trie
 
 import (
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func Test_Trie(t *testing.T) {
 	t.Parallel()
 
 	t.Run("insert", func(t *testing.T) {
+		is := assert.New(t)
+
 		trie := NewTrie()
 
 		trie.Insert("hello", 10)
@@ -28,18 +32,17 @@ func Test_Trie(t *testing.T) {
 
 		for _, tc := range testCases {
 			node, found := find(trie, tc.key)
-			if found != tc.expectedTerm {
-				t.Errorf("Key \"%s\" is expected to be \"%v\", got \"%v\"", tc.key, tc.expectedTerm, found)
-			}
-
-			if found && node.Value != tc.expectedVal {
-				t.Errorf("Key \"%s\" is expected to have value \"%v\", got \"%v\"", tc.key, tc.expectedVal, node.Value)
+			is.Equalf(tc.expectedTerm, found, "Key \"%s\" is expected to be \"%v\", got \"%v\"", tc.key, tc.expectedTerm, found)
+			if tc.expectedTerm {
+				is.Equalf(tc.expectedVal, node.Value, "Key \"%s\" is expected to have value \"%v\", got \"%v\"", tc.key, tc.expectedVal, node.Value)
 			}
 		}
 
 	})
 
 	t.Run("find", func(t *testing.T) {
+		is := assert.New(t)
+
 		trie := NewTrie()
 
 		trie.Insert("hello", 10)
@@ -60,16 +63,16 @@ func Test_Trie(t *testing.T) {
 
 		for _, tc := range testCases {
 			val, found := trie.Find(tc.key)
-			if found != tc.expectedTerm {
-				t.Errorf("Key \"%s\" is expected to be \"%v\", got \"%v\"", tc.key, tc.expectedTerm, found)
-			}
-			if found && val != tc.expectedVal {
-				t.Errorf("Key \"%s\" is expected to have value \"%v\", got \"%v\"", tc.key, tc.expectedVal, val)
+			is.Equalf(tc.expectedTerm, found, "Key \"%s\" is expected to be \"%v\", got \"%v\"", tc.key, tc.expectedTerm, found)
+			if tc.expectedTerm {
+				is.Equalf(tc.expectedVal, val, "Key \"%s\" is expected to have value \"%v\", got \"%v\"", tc.key, tc.expectedVal, val)
 			}
 		}
 	})
 
 	t.Run("delete", func(t *testing.T) {
+		is := assert.New(t)
+
 		trie := NewTrie()
 
 		trie.Insert("hello", 10)
@@ -92,16 +95,14 @@ func Test_Trie(t *testing.T) {
 			{"hello", 0, false},
 			{"apply", 12, true},
 			{"something", 0, false},
+			{"helloworld", 2024, true},
 		}
 
 		for _, tc := range testCases {
 			val, found := trie.Find(tc.key)
-			if found != tc.expectedTerm {
-				t.Errorf("Key \"%v\" is expected to be \"%v\", got \"%v\"", tc.key, tc.expectedTerm, found)
-			}
-
-			if found && val != tc.expectedVal {
-				t.Errorf("Key \"%v\" is expected to have value \"%v\", got \"%v\"", tc.key, tc.expectedVal, val)
+			is.Equalf(tc.expectedTerm, found, "Key \"%v\" is expected to be \"%v\", got \"%v\"", tc.key, tc.expectedTerm, found)
+			if tc.expectedTerm {
+				is.Equalf(tc.expectedVal, val, "Key \"%v\" is expected to have value \"%v\", got \"%v\"", tc.key, tc.expectedVal, val)
 			}
 		}
 	})
