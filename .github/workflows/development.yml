@@ -5,7 +5,7 @@ on:
     branches: [ $default-branch ]
 
 jobs:
-  build:
+  unit-test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout branch
