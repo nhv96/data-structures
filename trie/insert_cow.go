@@ -35,7 +35,7 @@ func (t *Trie) InsertCOW(key string, value int) *Trie {
 
 			// link the newly created child node to parent node
 			parent.Children[string(c)] = newchild
-			parent = newchild
+			// parent = newchild
 
 			// move to the next inner node
 			cur = newchild
