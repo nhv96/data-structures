@@ -15,4 +15,5 @@ jobs:
         with:
           go-version: '1.19.0'
       - run: go version
-      - run: git branch
+      - name: Test
+        run: go test -v ./...
