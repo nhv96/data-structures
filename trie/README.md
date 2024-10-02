@@ -7,4 +7,4 @@ Current implementation only supports int data as value and variable-length strin
 ### What to improve
 
 - [ ] Implement generic data type for key and value
-- [ ] Implement copy-on-write
+- [x] Implement copy-on-write
