@@ -1,4 +1,4 @@
-module VinhNguyenHoang/data-structures
+module nhv96/data-structures
 
 go 1.19
 
